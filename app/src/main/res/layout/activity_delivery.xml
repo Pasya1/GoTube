@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".DeliveryActivity"
+    android:padding="16dp"
+    android:background="#F5F5F5"> <!-- Latar belakang abu-abu muda -->
+
+    <ImageButton
+        android:id="@+id/btnBack"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:minWidth="48dp"
+        android:minHeight="48dp"
+        android:src="@drawable/menu"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:padding="8dp"
+        android:contentDescription="Kembali"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBaseline_toBaselineOf="@id/goTube"/>
+
+    <TextView
+        android:id="@+id/goTube"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:text="GO TUBE"
+        android:textColor="@color/purple"
+        android:textStyle="bold"
+        app:layout_constraintBaseline_toBaselineOf="@id/btnBack"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="6dp"
+        android:layout_marginTop="50dp"
+        app:cardBackgroundColor="@android:color/white"
+        app:layout_constraintTop_toTopOf="@id/goTube"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Delivery Menu"
+                android:layout_gravity="center"
+                android:textSize="20dp"
+                android:padding="15dp"
+                android:textStyle="bold"/>
+
+            <!-- Nama Outlet (Spinner) -->
+            <TextView
+                android:id="@+id/tvOutlet"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nama Outlet" />
+
+            <Spinner
+                android:id="@+id/spinnerOutlet"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:padding="12dp"
+                android:textSize="16sp" />
+
+            <!-- Tanggal Input (DatePicker) -->
+            <TextView
+                android:id="@+id/tvTanggal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tanggal Input"
+                android:layout_marginTop="12dp" />
+
+            <EditText
+                android:id="@+id/etTanggal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Pilih Tanggal"
+                android:minHeight="48dp"
+                android:padding="12dp"
+                android:textSize="16sp"
+                android:focusable="false"
+                android:clickable="true" />
+
+            <!-- Status Tabung (RadioButton) -->
+            <TextView
+                android:id="@+id/tvTabung"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Status Tabung"
+                android:layout_marginTop="12dp" />
+
+
+            <RadioGroup
+                android:id="@+id/rgTabung"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/rbIsi"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Isi" />
+
+                <RadioButton
+                    android:id="@+id/rbKosong"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Kosong" />
+            </RadioGroup>
+
+<!--             Kode Tabung -->
+            <TextView
+                android:id="@+id/tvKodeTabung"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Kode Tabung"
+                android:layout_marginTop="12dp" />
+            <Spinner
+                android:id="@+id/spinnerTabung"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"/>
+
+
+<!--            <EditText-->
+<!--                android:id="@+id/etKodeTabung"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:hint="Masukkan Kode Tabung"-->
+<!--                android:minHeight="48dp"-->
+<!--                android:padding="12dp"-->
+<!--                android:textSize="16sp"-->
+<!--                android:inputType="text" />-->
+
+            <!-- Nama Penerima -->
+            <TextView
+                android:id="@+id/tvPenerima"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nama Penerima"
+                android:layout_marginTop="12dp" />
+
+            <EditText
+                android:id="@+id/etNamaPenerima"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Masukkan Nama Penerima"
+                android:minHeight="48dp"
+                android:padding="12dp"
+                android:textSize="16sp"
+                android:inputType="textPersonName" />
+
+            <!-- Tombol Submit -->
+            <Button
+                android:id="@+id/btnSubmit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Simpan Data"
+                android:backgroundTint="@color/sage"
+                android:textColor="@android:color/white"
+                android:layout_marginTop="24dp"
+                android:drawableRight="@drawable/plus"
+                app:layout_constraintTop_toBottomOf="@id/cardInput"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
