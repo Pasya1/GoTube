@@ -1,0 +1,39 @@
+<div class="mb-3">
+    <label>Nama Outlet</label>
+    <input type="text" name="nama_outlet" id="{{ isset($isEdit) ? 'editNama' : '' }}" class="form-control" required>
+</div>
+<div class="mb-3">
+    <label>Nama SPV</label>
+    <input type="text" name="nama_spv" id="{{ isset($isEdit) ? 'editSpv' : '' }}" class="form-control">
+</div>
+<div class="mb-3">
+    <label>Nama Area</label>
+    <input type="text" name="nama_area" id="{{ isset($isEdit) ? 'editArea' : '' }}" class="form-control">
+</div>
+<div class="mb-3">
+    <label>Merk Inflator</label>
+    <input type="text" name="merk_inflator" id="{{ isset($isEdit) ? 'editInflator' : '' }}" class="form-control">
+</div>
+<div class="mb-3">
+    <label>Merk Regulator</label>
+    <input type="text" name="merk_regulator" id="{{ isset($isEdit) ? 'editRegulator' : '' }}" class="form-control">
+</div>
+<div class="mb-3">
+    <label>Distribusi By</label>
+    <input type="text" name="distribusi_by" id="{{ isset($isEdit) ? 'editDistribusi' : '' }}" class="form-control">
+</div>
+<div class="mb-3">
+    <label>Nama Vendor</label>
+    <input type="text" name="nama_vendor" id="{{ isset($isEdit) ? 'editVendor' : '' }}" class="form-control">
+</div>
+<div class="mb-3">
+    <label>Harga Isi N₂</label>
+    <input type="number" name="harga_isi_n2" id="{{ isset($isEdit) ? 'editHarga' : '' }}" class="form-control" step="1"
+        min="0">
+</div>
+<div class="mb-3">
+    <label>Pilih Lokasi di Peta</label>
+    <div id="map" style="height: 300px;"></div>
+    <input type="hidden" name="latitude" id="latitude">
+    <input type="hidden" name="longitude" id="longitude">
+</div>

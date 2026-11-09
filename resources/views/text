@@ -1,0 +1,358 @@
+@extends('layouts.master')
+
+@section('title', 'Beranda | Go Tube')
+
+@section('content')
+<div class="content" style="height: 100vh;">
+    <!-- HERO -->
+    <section id="hero" class=" d-flex align-items-center text-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <h4 data-aos="fade-left" class="judul-utama text-white fw-semibold display-6">Membantu Monitoring
+                        Pengiriman Tabung Nitrogen
+                    </h4>
+                    <p class="text-white mt-3 mb-4 " data-aos="fade-right">GO TUBE
+                    </p>
+                </div>
+            </div>
+        </div>
+        <!-- Menu di dalam hero -->
+
+        <!-- Menu di dalam hero -->
+        <div id="menu" class="position-absolute w-100" style="bottom: -50px; z-index: 1000;">
+            <div class="container">
+                <div class="row menu-card justify-content-center">
+                    <div class=" col-lg-10 col-md-12 bg-white p-2 rounded-4 shadow-lg">
+                        <ul class="nav menu-nav">
+                            <li class="nav-item">
+                                <a class="nav-link text-center menu-link" data-bs-toggle="modal"
+                                    data-bs-target="#modalInputPengiriman">
+                                    <i class="fa-solid fa-plus menu-icon mb-1"></i><br>
+                                    Input Pengiriman
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-center menu-link" href="{{ route('tracking.index') }}">
+                                    <i class="fa-solid fa-truck menu-icon mb-1"></i><br>
+                                    Tracking Pengiriman
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-center menu-link" href="{{ route('history.index') }}">
+                                    <i class="fa-solid fa-clock-rotate-left menu-icon mb-1"></i><br>
+                                    History Pengiriman
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-center menu-link" href="{{ route('tabung.index') }}">
+                                    <i class="fa-solid fa-gas-pump menu-icon mb-1 px-2"></i><br>
+                                    Data Tabung
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-center menu-link" href="{{ route('outlet.index') }}">
+                                    <i class="fa-solid fa-store menu-icon mb-1"></i><br>
+                                    Data Outlet
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- RIWAYAT -->
+    <section id="about" class="section-padding">
+        <div class="riwayat container">
+            <div class="row">
+                <div class="col-12 text-center" data-aos="fade-down" data-aos-delay="50">
+                    <div class="section-title">
+                        <h2 class="display-5 fw-semibold">RIWAYAT</h2>
+                        <div class="line"></div>
+                        <p>
+                            <span class="text-secondary">
+                                {{ \Carbon\Carbon::now()->locale('id')->translatedFormat('l, d F Y') }}
+                            </span>
+                            -
+                            <span class="text-secondary">
+                                {{ \Carbon\Carbon::now()->locale('id')->format('H:i') }} WIB
+                            </span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="row justify-content-between align-items-center">
+                <div class="col-lg-6" data-aos="fade-down" data-aos-delay="50">
+                    <h1>Aktivitas Hari Ini</h1>
+                    @if ($aktivitasHariIni->isEmpty())
+                    <div class="card mt-3">
+                        <div class="card-body text-muted">
+                            Tidak ada aktivitas hari ini.
+                        </div>
+                    </div>
+                    @else
+                    @foreach ($aktivitasHariIni as $aktivitas)
+                    <div class="card mt-3 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title mb-1">
+                                {{ $aktivitas->outlet->nama_outlet }}
+                            </h5>
+                            <p class="card-text text-muted mb-0">
+                                {{ $aktivitas->tabungs->count() }} Tabung Isi Dikirim
+                            </p>
+                            <p class="card-text text-muted mb-0">
+                                {{ $aktivitas->pengambilanKosong->count() }} Tabung Kosong Diambil
+                            </p>
+                            <small class="text-secondary">
+                                {{ \Carbon\Carbon::parse($aktivitas->tanggal_pengiriman)->translatedFormat('d F Y') }}
+
+                            </small>
+                        </div>
+                    </div>
+                    @endforeach
+                    @endif
+                </div>
+                <div data-aos="fade-down" data-aos-delay="150" class="col-lg-5">
+
+                    <div class="d-flex pt-4 mb-3">
+                        <div class="iconbox me-4">
+                            <i class="ri-user-5-fill"></i>
+                        </div>
+                        <div>
+                            <h5>Total Pengiriman Tabung Isi Hari Ini</h5>
+                            <p>{{ $jumlahTabungHariIni }} Pengiriman</p>
+                        </div>
+                    </div>
+                    <div class="d-flex mb-3">
+                        <div class="iconbox me-4">
+                            <i class="ri-mail-send-fill"></i>
+                        </div>
+                        <div>
+                            <h5>Total Pengambilan Tabung Kosong Hari Ini</h5>
+                            <p>{{ $jumlahTabungKosongHariIni }} Pengambilan</p>
+                        </div>
+                    </div>
+                    <div class="d-flex">
+                        <div class="iconbox me-4">
+                            <i class="fa-solid fa-book"></i>
+                        </div>
+                        <div>
+                            <h5>Jumlah Outlet Tujuan</h5>
+                            <p>{{ $jumlahOutletHariIni }} Outlet</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {{-- MODAL INPUT PENGIRIMAN --}}
+    <div class="modal fade" id="modalInputPengiriman" tabindex="-1" aria-labelledby="modalInputPengirimanLabel"
+        aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+
+                <!-- Header -->
+                <div class="modal-header" style="background-color: #024E7F; color: white;">
+                    <h5 class="modal-title" id="modalInputPengirimanLabel">Form Input Pengiriman</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                        style="background-color:white;"></button>
+                </div>
+
+                <!-- Body -->
+                <div class="modal-body">
+                    <form action="{{ route('pengiriman.store') }}" method="POST" id="formPengiriman">
+                        @csrf
+                        <div class="row">
+
+                            <!-- Outlet Tujuan -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Outlet Tujuan</label>
+                                <select class="form-select" name="outlet" required>
+                                    <option value="">-- Pilih Outlet --</option>
+                                    @foreach ($outlets as $outlet)
+                                    <option value="{{ $outlet->id }}">{{ $outlet->nama_outlet }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <!-- Tanggal Pengiriman -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Tanggal Pengiriman</label>
+                                <input type="date" class="form-control" name="tanggal_pengiriman" required>
+                            </div>
+
+                            <hr class="my-4">
+
+                            <!-- Nomor Tabung -->
+                            <p class="fw-bold text-center text-uppercase" style="color: #198754;">Pengiriman Tabung
+                                Isi Ke
+                                Outlet</p>
+                            <div id="tabungWrapper">
+                                <div class="row g-2 align-items-center mb-2 tabung-item">
+                                    <div class="col-10 col-md-10">
+                                        <select name="tabung[]" class="form-select tabung-select">
+                                            <option value="">-- Pilih Seri Tabung --</option>
+                                            @foreach ($tabungsIsi as $tabung)
+                                            <option value="{{ $tabung->id }}">{{ $tabung->kode_tabung }}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-2">
+                                        <button type="button"
+                                            class="btn btn-success btn-add w-100 rounded d-flex align-items-center justify-content-center">+</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Keterangan -->
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label">Keterangan</label>
+                                <textarea class="form-control" name="keterangan" rows="2"></textarea>
+                            </div>
+
+                            <hr class="my-4">
+
+                            <p class="fw-bold text-center text-uppercase" style="color: #024E7F;">Pengambilan Tabung
+                                Kosong Dari
+                                Outlet</p>
+
+                            <!-- Nomor Tabung -->
+                            <div id="tabungWrapper2">
+                                <div class="row g-2 align-items-center mb-2 tabung-item2">
+                                    <div class="col-10 col-md-10">
+                                        <select name="tabung2[]" class="form-select tabung-select2">
+                                            <option value="">-- Pilih Seri Tabung --</option>
+                                            @foreach ($tabungsKosong as $tabung)
+                                            <option value="{{ $tabung->id }}">{{ $tabung->kode_tabung }}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-2">
+                                        <button type="button"
+                                            class="btn btn-success btn-add2 w-100 rounded d-flex align-items-center justify-content-center">+</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Keterangan -->
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label">Keterangan</label>
+                                <textarea class="form-control" name="keterangan_pengambilan" rows="2"></textarea>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" form="formPengiriman" class="btn"
+                        style="background-color:#3BA484; color:white;">Simpan</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <script>
+        document.addEventListener("click", function (e) {
+            if (e.target.classList.contains("btn-add")) {
+                e.preventDefault();
+                let wrapper = document.getElementById("tabungWrapper");
+                let newRow = document.createElement("div");
+                newRow.className = "row g-2 align-items-center mb-2 tabung-item";
+                newRow.innerHTML = `
+                    <div class="col-10 col-md-10">
+                        <select name="tabung[]" class="form-select tabung-select" required>
+                            <option value="">-- Pilih Seri Tabung --</option>
+                            @foreach ($tabungsIsi as $tabung)
+                                <option value="{{ $tabung->id }}">{{ $tabung->kode_tabung }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-2">
+                        <button type="button" class="btn btn-danger btn-remove w-100 rounded align-items-center justify-content-center d-flex">-</button>
+                    </div>
+            `;
+                wrapper.appendChild(newRow);
+            }
+
+            if (e.target.classList.contains("btn-remove")) {
+                e.preventDefault();
+                e.target.closest(".tabung-item").remove();
+            }
+        });
+
+        // YANG KEDUA
+        document.addEventListener("click", function (e) {
+            if (e.target.classList.contains("btn-add2")) {
+                e.preventDefault();
+                let wrapper = document.getElementById("tabungWrapper2");
+                let newRow = document.createElement("div");
+                newRow.className = "row g-2 align-items-center mb-2 tabung-item2";
+                newRow.innerHTML = `
+                    <div class="col-10 col-md-10">
+                        <select name="tabung2[]" class="form-select tabung-select2" required>
+                            <option value="">-- Pilih Seri Tabung --</option>
+                            @foreach ($tabungsKosong as $tabung)
+                                <option value="{{ $tabung->id }}">{{ $tabung->kode_tabung }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-2">
+                        <button type="button" class="btn btn-danger btn-remove2 w-100 rounded align-items-center justify-content-center d-flex">-</button>
+                    </div>
+            `;
+                wrapper.appendChild(newRow);
+            }
+
+            if (e.target.classList.contains("btn-remove2")) {
+                e.preventDefault();
+                e.target.closest(".tabung-item2").remove();
+            }
+        });
+    </script>
+
+    @if (session('success'))
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil!',
+            text: '{{ session('success') }}',
+            showConfirmButton: false,
+            timer: 2000
+        });
+    </script>
+    @endif
+    @if (session('error'))
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'Gagal!',
+            text: '{{ session('error') }}',
+            showConfirmButton: false,
+            timer: 2000
+        });
+    </script>
+    @endif
+
+
+    @include('layouts.bawah')
+
+</div>
+
+</div>
+</div>
+@endsection

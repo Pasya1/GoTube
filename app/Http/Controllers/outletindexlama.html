@@ -1,0 +1,302 @@
+@extends('layouts.master')
+
+@section('title', 'Data Outlet | Go Tube')
+
+@section('content')
+<div class="container">
+    <h3 class="fw-bold mb-4 title-page text-uppercase text-center" style="color:#024E7F;">Data Outlet</h3>
+
+    {{-- Tombol tambah & search --}}
+    <div class="row g-2 align-items-center mb-4">
+        @if (Auth::user()->role !== 'kurir' && Auth::user()->role !== 'spv')
+        <!-- Tombol Tambah -->
+        <div class="col-12 col-sm-auto">
+            <button class="btn w-100 rounded shadow" style="background-color:#3BA484; color:white;"
+                data-bs-toggle="modal" data-bs-target="#modalTambah">
+                <i class="fa-solid fa-plus me-1"></i> Tambah Outlet
+            </button>
+        </div>
+        @endif
+
+        <!-- Input Search -->
+        <div class="col-12 col-sm">
+            <input type="text" id="searchInput" class="form-control w-100" placeholder="Cari outlet...">
+        </div>
+    </div>
+
+    {{-- Grid Card Outlet --}}
+    <div class="row g-3" id="outletCards">
+        @forelse ($outlets as $o)
+        <div class="col-12 col-sm-6 col-lg-4 outlet-card">
+            <div class="card shadow-sm rounded-4 h-100">
+                <div class="card-body">
+                    <h5 class="fw-bold text-center text-uppercase" style="color:#024E7F;">
+                        {{ $o->nama_outlet }}
+                    </h5>
+
+                    <div class="card-info-row mb-1">
+                        <div class="card-info-label">SPV</div>
+                        <div class="card-info-value">: {{ $o->nama_spv ?? '-' }}</div>
+                    </div>
+
+                    <div class="card-info-row mb-1">
+                        <div class="card-info-label">Area</div>
+                        <div class="card-info-value">: {{ $o->nama_area ?? '-' }}</div>
+                    </div>
+
+                    <div class="card-info-row mb-1">
+                        <div class="card-info-label">Vendor</div>
+                        <div class="card-info-value">: {{ $o->nama_vendor ?? '-' }}</div>
+                    </div>
+
+                    <div class="card-info-row mb-1">
+                        <div class="card-info-label">Harga Isi N₂</div>
+                        <div class="card-info-value">
+                            : Rp {{ number_format($o->harga_isi_n2, 0, ',', '.') }}
+                        </div>
+                    </div>
+
+                    <p>{{ $o->alamat }}</p>
+                    <iframe width="100%" height="150" style="border:0" loading="lazy" allowfullscreen
+                        src="https://www.google.com/maps?q={{ $o->latitude }},{{ $o->longitude }}&hl=es;z=14&output=embed">
+                    </iframe>
+                </div>
+
+                <div class="card-footer bg-white border-0 d-flex justify-content-between">
+                    <button class="btn btn-primary btn-sm btn-detail rounded" data-nama="{{ $o->nama_outlet }}"
+                        data-spv="{{ $o->nama_spv }}" data-area="{{ $o->nama_area }}"
+                        data-vendor="{{ $o->nama_vendor }}" data-inflator="{{ $o->merk_inflator }}"
+                        data-regulator="{{ $o->merk_regulator }}" data-distribusi="{{ $o->distribusi_by }}"
+                        data-harga="{{ number_format($o->harga_isi_n2, 0, ',', '.') }}" data-maps="{{ $o->maps_url }}"
+                        data-bs-toggle="modal" data-bs-target="#modalDetail">
+                        <i class="fa-solid fa-eye"></i> Detail
+                    </button>
+
+                    @if (Auth::user()->role !== 'kurir' && Auth::user()->role !== 'spv')
+                    <div>
+                        <button class="btn btn-warning btn-sm text-white btn-edit rounded" data-id="{{ $o->id }}"
+                            data-nama="{{ $o->nama_outlet }}" data-spv="{{ $o->nama_spv }}"
+                            data-area="{{ $o->nama_area }}" data-inflator="{{ $o->merk_inflator }}"
+                            data-regulator="{{ $o->merk_regulator }}" data-distribusi="{{ $o->distribusi_by }}"
+                            data-vendor="{{ $o->nama_vendor }}" data-harga="{{ $o->harga_isi_n2 }}"
+                            data-lat="{{ $o->latitude }}" data-lng="{{ $o->longitude }}" data-bs-toggle="modal"
+                            data-bs-target="#modalEdit">
+                            <i class="fa-solid fa-pen"></i>
+                        </button>
+                        <form action="{{ route('outlet.destroy', $o->id) }}" method="POST" class="d-inline form-delete">
+                            @csrf @method('DELETE')
+                            <button class="btn btn-danger btn-sm rounded"><i class="fa-solid fa-trash"></i></button>
+                        </form>
+                    </div>
+                    @endif
+                </div>
+            </div>
+        </div>
+        @empty
+        <p class="text-center text-muted">Belum ada data outlet.</p>
+        @endforelse
+    </div>
+
+    {{-- Modal Detail --}}
+    <div class="modal fade" id="modalDetail" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Detail Outlet</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <h4 id="detailNama" class="fw-bold mb-3 text-center" style="color: #024E7F"></h4>
+
+                    <div class="card-info-row mb-1">
+                        <div class="card-info-label">SPV</div>
+                        <div class="card-info-value" id="detailSpv"></div>
+                    </div>
+                    <div class="card-info-row mb-1">
+                        <div class="card-info-label">Area</div>
+                        <div class="card-info-value" id="detailArea"></div>
+                    </div>
+                    <div class="card-info-row mb-1">
+                        <div class="card-info-label">Vendor</div>
+                        <div class="card-info-value" id="detailVendor"></div>
+                    </div>
+                    <div class="card-info-row mb-1">
+                        <div class="card-info-label">Merk Inflator</div>
+                        <div class="card-info-value" id="detailInflator"></div>
+                    </div>
+                    <div class="card-info-row mb-1">
+                        <div class="card-info-label">Merk Regulator</div>
+                        <div class="card-info-value" id="detailRegulator"></div>
+                    </div>
+                    <div class="card-info-row mb-1">
+                        <div class="card-info-label">Distribusi By</div>
+                        <div class="card-info-value" id="detailDistribusi"></div>
+                    </div>
+                    <div class="card-info-row mb-3">
+                        <div class="card-info-label">Harga Isi N₂</div>
+                        <div class="card-info-value">Rp <span id="detailHarga"></span></div>
+                    </div>
+
+                    <div id="detailMap" style="height:300px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{{-- Modal Tambah --}}
+<div class="modal fade" id="modalTambah" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="{{ route('outlet.store') }}" method="POST">
+                @csrf
+                <div class="modal-header">
+                    <h5 class="modal-title">Tambah Outlet</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    @include('outlet.form')
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-success">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{{-- Modal Edit --}}
+<div class="modal fade" id="modalEdit" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="formEdit" method="POST">
+                @csrf
+                @method('PUT')
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Outlet</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    @include('outlet.form', ['isEdit' => true])
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-warning text-white">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://maps.googleapis.com/maps/api/js?key=API_KEY&callback=initMap" async defer></script>
+
+<script>
+    // Search Filter Cards
+    document.getElementById('searchInput').addEventListener('keyup', function () {
+        let filter = this.value.toLowerCase();
+        document.querySelectorAll('.outlet-card').forEach(card => {
+            let text = card.innerText.toLowerCase();
+            card.style.display = text.includes(filter) ? '' : 'none';
+        });
+    });
+
+    function initMap() {
+        let defaultLatLng = {
+            lat: -6.200000,
+            lng: 106.816666
+        }; // Jakarta default
+        let map = new google.maps.Map(document.getElementById("map"), {
+            center: defaultLatLng,
+            zoom: 12,
+        });
+
+        let marker = new google.maps.Marker({
+            position: defaultLatLng,
+            map: map,
+            draggable: true
+        });
+
+        // Update lat lng ke input
+        google.maps.event.addListener(marker, 'dragend', function (event) {
+            document.getElementById('latitude').value = event.latLng.lat();
+            document.getElementById('longitude').value = event.latLng.lng();
+        });
+
+        // Klik di map untuk pindah marker
+        google.maps.event.addListener(map, 'click', function (event) {
+            marker.setPosition(event.latLng);
+            document.getElementById('latitude').value = event.latLng.lat();
+            document.getElementById('longitude').value = event.latLng.lng();
+        });
+    }
+
+    // Isi data modal edit
+    document.querySelectorAll('.btn-edit').forEach(btn => {
+        btn.addEventListener('click', function () {
+            document.getElementById('formEdit').action = `/outlet/${this.dataset.id}`;
+            document.getElementById('editNama').value = this.dataset.nama;
+            document.getElementById('editSpv').value = this.dataset.spv;
+            document.getElementById('editArea').value = this.dataset.area;
+            document.getElementById('editInflator').value = this.dataset.inflator;
+            document.getElementById('editRegulator').value = this.dataset.regulator;
+            document.getElementById('editDistribusi').value = this.dataset.distribusi;
+            document.getElementById('editVendor').value = this.dataset.vendor;
+            document.getElementById('editHarga').value = this.dataset.harga;
+            document.getElementById('editMaps').value = this.dataset.maps;
+        });
+    });
+
+    // Isi data modal detail
+    document.querySelectorAll('.btn-detail').forEach(btn => {
+        btn.addEventListener('click', function () {
+            document.getElementById('detailNama').innerText = this.dataset.nama;
+            document.getElementById('detailSpv').innerText = this.dataset.spv ?? '-';
+            document.getElementById('detailArea').innerText = this.dataset.area ?? '-';
+            document.getElementById('detailVendor').innerText = this.dataset.vendor ?? '-';
+            document.getElementById('detailInflator').innerText = this.dataset.inflator ?? '-';
+            document.getElementById('detailRegulator').innerText = this.dataset.regulator ?? '-';
+            document.getElementById('detailDistribusi').innerText = this.dataset.distribusi ?? '-';
+            document.getElementById('detailHarga').innerText = this.dataset.harga ?? '0';
+
+            // Tampilkan peta
+            let lat = this.dataset.lat;
+            let lng = this.dataset.lng;
+            document.getElementById('detailMap').innerHTML = `
+            <iframe width="100%" height="100%" style="border:0;" loading="lazy"
+            src="https://www.google.com/maps?q=${lat},${lng}&hl=id&z=14&output=embed"></iframe>`;
+        });
+    });
+
+
+    // SweetAlert hapus
+    document.querySelectorAll('.form-delete').forEach(form => {
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            Swal.fire({
+                title: 'Yakin hapus data ini?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Ya, hapus!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        });
+    });
+
+    // SweetAlert sukses
+    @if (session('success'))
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil',
+            text: "{{ session('success') }}"
+        });
+    @endif
+</script>
+@endsection

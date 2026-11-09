@@ -1,0 +1,2150 @@
+@extends('layouts.master')
+
+@section('title', 'Beranda | Go Tube')
+
+@section('content')
+
+    <style>
+        /* =========================================================
+           GLOBAL
+        ========================================================= */
+        :root {
+            --primary: #024E7F;
+            --primary-dark: #013957;
+            --primary-light: #0b6fa8;
+            --success: #16a34a;
+            --warning: #f59e0b;
+            --danger: #dc2626;
+            --text-dark: #183247;
+            --text-muted: #6b7c8f;
+            --soft-bg: #f5f9fc;
+        }
+
+        .content {
+            min-height: 100vh;
+            overflow-x: hidden;
+            background: #fff;
+        }
+
+
+        /* =========================================================
+           HERO
+        ========================================================= */
+        #hero {
+            position: relative;
+            min-height: 470px;
+            padding: 100px 20px 170px;
+            overflow: visible;
+
+            background:
+                radial-gradient(circle at 15% 20%,
+                    rgba(255, 255, 255, .14),
+                    transparent 30%),
+                radial-gradient(circle at 85% 80%,
+                    rgba(0, 188, 255, .12),
+                    transparent 30%),
+                linear-gradient(
+                    135deg,
+                    #013957 0%,
+                    #024E7F 45%,
+                    #0879b5 100%
+                );
+        }
+
+        #hero::before {
+            content: "";
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            background: rgba(255,255,255,.04);
+            top: -200px;
+            right: -100px;
+        }
+
+        #hero::after {
+            content: "";
+            position: absolute;
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            background: rgba(255,255,255,.04);
+            bottom: -100px;
+            left: -80px;
+        }
+
+        .judul-utama {
+            position: relative;
+            z-index: 2;
+            max-width: 850px;
+            margin: 0 auto;
+            font-size: clamp(1.8rem, 4vw, 3.3rem) !important;
+            line-height: 1.25;
+            letter-spacing: -.5px;
+        }
+
+        .hero-subtitle {
+            position: relative;
+            z-index: 2;
+            font-size: clamp(.9rem, 2vw, 1.15rem);
+            opacity: .9;
+        }
+
+        .hero-brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 18px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,.25);
+            border-radius: 50px;
+            background: rgba(255,255,255,.10);
+            backdrop-filter: blur(10px);
+            font-size: .85rem;
+            font-weight: 600;
+            color: #fff;
+        }
+
+
+        /* =========================================================
+           MENU
+        ========================================================= */
+        #menu {
+            bottom: -65px !important;
+        }
+
+        .menu-card {
+            position: relative;
+            z-index: 20;
+        }
+
+        .menu-wrapper {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid rgba(255,255,255,.7);
+            border-radius: 24px;
+            background: rgba(255,255,255,.96);
+            box-shadow:
+                0 20px 50px rgba(0, 48, 75, .18),
+                0 5px 15px rgba(0, 0, 0, .06);
+            backdrop-filter: blur(15px);
+        }
+
+        .menu-nav {
+            display: grid !important;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 8px;
+            width: 100%;
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+
+        .menu-nav .nav-item {
+            min-width: 0;
+        }
+
+        .menu-link {
+            position: relative;
+            display: flex !important;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+
+            min-height: 92px;
+            padding: 12px 8px !important;
+
+            border-radius: 17px;
+            color: var(--text-dark) !important;
+
+            font-size: .78rem;
+            font-weight: 600;
+            line-height: 1.25;
+
+            transition:
+                transform .25s ease,
+                background .25s ease,
+                color .25s ease,
+                box-shadow .25s ease;
+        }
+
+        .menu-link:hover {
+            color: #fff !important;
+            background: linear-gradient(
+                135deg,
+                var(--primary),
+                var(--primary-light)
+            );
+
+            transform: translateY(-5px);
+
+            box-shadow:
+                0 12px 25px rgba(2, 78, 127, .22);
+        }
+
+        .menu-icon {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            width: 45px;
+            height: 45px;
+
+            margin-bottom: 8px !important;
+
+            border-radius: 13px;
+
+            background: #eaf5fb;
+            color: var(--primary);
+
+            font-size: 19px;
+
+            transition: .25s ease;
+        }
+
+        .menu-link:hover .menu-icon {
+            background: rgba(255,255,255,.18);
+            color: #fff;
+            transform: scale(1.08);
+        }
+
+
+        /* =========================================================
+           RIWAYAT SECTION
+        ========================================================= */
+        #about {
+            position: relative;
+            padding-top: 150px;
+            padding-bottom: 80px;
+            background:
+                linear-gradient(
+                    180deg,
+                    #fff 0%,
+                    #f7fbfd 100%
+                );
+        }
+
+        .section-title h2 {
+            color: var(--text-dark);
+            letter-spacing: 1px;
+        }
+
+        .section-title .line {
+            width: 55px;
+            height: 4px;
+            margin: 14px auto;
+            border-radius: 10px;
+
+            background: linear-gradient(
+                90deg,
+                var(--primary),
+                #17a8e3
+            );
+        }
+
+        .section-title p {
+            font-size: .9rem;
+        }
+
+
+        /* =========================================================
+           AKTIVITAS
+        ========================================================= */
+        .activity-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .activity-title-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            width: 48px;
+            height: 48px;
+
+            border-radius: 14px;
+
+            background: #eaf5fb;
+            color: var(--primary);
+
+            font-size: 20px;
+        }
+
+        .activity-title h3 {
+            margin: 0;
+            color: var(--text-dark);
+            font-size: 1.35rem;
+            font-weight: 700;
+        }
+
+        .activity-card {
+            position: relative;
+            overflow: hidden;
+
+            margin-bottom: 14px;
+
+            border: 1px solid #e6eef4 !important;
+            border-radius: 18px !important;
+
+            background: #fff;
+
+            transition:
+                transform .25s ease,
+                box-shadow .25s ease;
+        }
+
+        .activity-card::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+
+            width: 4px;
+
+            background: linear-gradient(
+                180deg,
+                var(--primary),
+                #19a7df
+            );
+        }
+
+        .activity-card:hover {
+            transform: translateY(-3px);
+
+            box-shadow:
+                0 12px 30px rgba(2, 78, 127, .10) !important;
+        }
+
+        .activity-outlet {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .activity-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .activity-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+
+            padding: 6px 10px;
+
+            border-radius: 50px;
+
+            font-size: .75rem;
+            font-weight: 600;
+
+            background: #f2f7fa;
+            color: #526778;
+        }
+
+        .activity-date {
+            display: block;
+            margin-top: 10px;
+
+            color: #8b9aa8;
+            font-size: .75rem;
+        }
+
+        .empty-card {
+            padding: 35px 20px;
+
+            border: 1px dashed #d4e1e9;
+            border-radius: 18px;
+
+            background: #fff;
+
+            text-align: center;
+            color: var(--text-muted);
+        }
+
+        .empty-icon {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            width: 60px;
+            height: 60px;
+
+            margin: 0 auto 15px;
+
+            border-radius: 50%;
+
+            background: #eef6fa;
+            color: var(--primary);
+
+            font-size: 24px;
+        }
+
+
+        /* =========================================================
+           STATISTIC CARD
+        ========================================================= */
+        .stat-card {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+
+            padding: 20px;
+
+            margin-bottom: 15px;
+
+            border: 1px solid #e7eef3;
+            border-radius: 18px;
+
+            background: #fff;
+
+            box-shadow:
+                0 8px 25px rgba(20, 60, 80, .06);
+
+            transition: .25s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+
+            box-shadow:
+                0 14px 30px rgba(20, 60, 80, .10);
+        }
+
+        .stat-icon {
+            flex: 0 0 auto;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            width: 54px;
+            height: 54px;
+
+            border-radius: 15px;
+
+            background: #eaf5fb;
+            color: var(--primary);
+
+            font-size: 20px;
+        }
+
+        .stat-card:nth-child(2) .stat-icon {
+            background: #fff5df;
+            color: #e49a00;
+        }
+
+        .stat-card:nth-child(3) .stat-icon {
+            background: #e8f8ee;
+            color: #16a34a;
+        }
+
+        .stat-label {
+            margin: 0 0 3px;
+
+            color: var(--text-muted);
+            font-size: .8rem;
+            font-weight: 500;
+        }
+
+        .stat-value {
+            margin: 0;
+
+            color: var(--text-dark);
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+
+        /* =========================================================
+           MODAL
+        ========================================================= */
+        .modal-content {
+            overflow: hidden;
+            border: 0 !important;
+            border-radius: 22px !important;
+
+            box-shadow:
+                0 25px 70px rgba(0, 0, 0, .25);
+        }
+
+        .modal-header {
+            padding: 18px 22px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--primary-dark),
+                    var(--primary)
+                ) !important;
+        }
+
+        .modal-title {
+            font-weight: 700;
+        }
+
+        .modal-body {
+            padding: 25px;
+            background: #fbfdff;
+        }
+
+        .modal-footer {
+            padding: 15px 20px;
+            background: #fff;
+        }
+
+        .form-label,
+        .modal-body label {
+            margin-bottom: 7px;
+            color: var(--text-dark);
+            font-size: .85rem;
+            font-weight: 600;
+        }
+
+        .form-control,
+        .form-select {
+            min-height: 45px;
+
+            border: 1px solid #dce7ee;
+            border-radius: 11px;
+
+            box-shadow: none !important;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: var(--primary);
+
+            box-shadow:
+                0 0 0 3px rgba(2, 78, 127, .10) !important;
+        }
+
+        .scan-title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+
+            margin: 10px 0 15px;
+
+            font-size: .95rem;
+            font-weight: 700;
+        }
+
+        .scan-title.isi {
+            color: var(--success);
+        }
+
+        .scan-title.kosong {
+            color: var(--primary);
+        }
+
+        .scan-divider {
+            height: 1px;
+            margin: 25px 0;
+
+            border: 0;
+
+            background: #e3edf3;
+        }
+
+        .scan-button {
+            min-width: 155px;
+            border-radius: 11px;
+            font-weight: 600;
+        }
+
+
+        /* =========================================================
+           SCANNER
+        ========================================================= */
+        .scanner-box {
+            position: relative;
+
+            width: 100%;
+            max-width: 340px;
+            height: 320px;
+
+            margin: 15px auto;
+
+            display: none;
+
+            overflow: hidden;
+
+            border: 3px solid #dbe8ef;
+            border-radius: 18px;
+
+            background: #071923;
+
+            box-shadow:
+                0 12px 30px rgba(0, 0, 0, .15);
+        }
+
+        #readerIsi video,
+        #readerKosong video {
+            width: 100% !important;
+            height: 100% !important;
+
+            object-fit: cover;
+        }
+
+        .scanner-box::after {
+            content: "";
+
+            position: absolute;
+
+            width: 65%;
+            height: 2px;
+
+            top: 50%;
+            left: 17.5%;
+
+            background: #ff3b30;
+
+            box-shadow:
+                0 0 8px rgba(255, 59, 48, .8);
+
+            animation: scanLine 2s infinite;
+
+            pointer-events: none;
+        }
+
+        @keyframes scanLine {
+            0% {
+                top: 20%;
+            }
+
+            50% {
+                top: 80%;
+            }
+
+            100% {
+                top: 20%;
+            }
+        }
+
+
+        /* =========================================================
+           SCANNED ITEM
+        ========================================================= */
+        .scan-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+
+            margin-top: 8px;
+        }
+
+        .scan-item input {
+            flex: 1;
+        }
+
+        .scan-item button {
+            width: 45px;
+            min-width: 45px;
+            height: 45px;
+
+            border-radius: 10px;
+        }
+
+
+        /* =========================================================
+           RESPONSIVE TABLET
+        ========================================================= */
+        @media (max-width: 991.98px) {
+
+            #hero {
+                min-height: 520px;
+            }
+
+            .menu-nav {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .menu-link {
+                min-height: 85px;
+            }
+
+            #about {
+                padding-top: 145px;
+            }
+
+            .activity-column {
+                margin-bottom: 35px;
+            }
+        }
+
+
+      /* =========================================================
+   RESPONSIVE MOBILE
+========================================================= */
+@media (max-width: 575.98px) {
+
+    #hero {
+        min-height: 620px;
+        padding: 75px 15px 210px;
+    }
+
+    .hero-brand {
+        font-size: .72rem;
+        padding: 7px 14px;
+    }
+
+    .judul-utama {
+        font-size: 1.65rem !important;
+        line-height: 1.3;
+    }
+
+    .hero-subtitle {
+        font-size: .85rem;
+        line-height: 1.5;
+    }
+
+
+    /* =========================================
+       MENU MOBILE
+    ========================================= */
+
+    #menu {
+        bottom: -100px !important;
+    }
+
+    .menu-card {
+        padding: 0 8px;
+    }
+
+    .menu-wrapper {
+        padding: 8px;
+
+        border-radius: 20px;
+
+        box-shadow:
+            0 15px 35px rgba(0, 48, 75, .16),
+            0 5px 15px rgba(0, 0, 0, .06);
+    }
+
+    .menu-nav {
+        grid-template-columns: repeat(3, 1fr);
+
+        gap: 6px;
+    }
+
+    .menu-nav .nav-item {
+        width: 100%;
+    }
+
+    .menu-link {
+        min-height: 88px;
+
+        padding: 8px 3px !important;
+
+        border-radius: 14px;
+
+        font-size: .67rem;
+
+        line-height: 1.2;
+    }
+
+    .menu-icon {
+        width: 38px;
+        height: 38px;
+
+        margin-bottom: 6px !important;
+
+        border-radius: 11px;
+
+        font-size: 16px;
+    }
+
+    /* efek ketika disentuh di HP */
+    .menu-link:active {
+        transform: scale(.96);
+    }
+
+
+    /* =========================================
+       RIWAYAT
+    ========================================= */
+
+    #about {
+        padding-top: 180px;
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+
+    .section-title h2 {
+        font-size: 1.9rem;
+    }
+
+    .section-title p {
+        font-size: .8rem;
+    }
+
+
+    /* =========================================
+       AKTIVITAS
+    ========================================= */
+
+    .activity-title {
+        gap: 10px;
+    }
+
+    .activity-title h3 {
+        font-size: 1.15rem;
+    }
+
+    .activity-title-icon {
+        width: 42px;
+        height: 42px;
+
+        border-radius: 12px;
+
+        font-size: 17px;
+    }
+
+    .activity-card .card-body {
+        padding: 16px;
+    }
+
+    .activity-info {
+        display: block;
+    }
+
+    .activity-badge {
+        width: 100%;
+
+        margin-bottom: 6px;
+
+        justify-content: flex-start;
+    }
+
+
+    /* =========================================
+       STATISTIC
+    ========================================= */
+
+    .stat-card {
+        padding: 16px;
+
+        gap: 12px;
+    }
+
+    .stat-icon {
+        width: 47px;
+        height: 47px;
+
+        border-radius: 13px;
+    }
+
+    .stat-label {
+        font-size: .74rem;
+    }
+
+    .stat-value {
+        font-size: .95rem;
+    }
+
+
+    /* =========================================
+       MODAL
+    ========================================= */
+
+    .modal-dialog {
+        margin: 10px;
+    }
+
+    .modal-body {
+        padding: 17px;
+    }
+
+    .modal-header {
+        padding: 16px;
+    }
+
+    .modal-footer {
+        display: flex;
+        gap: 8px;
+    }
+
+    .modal-footer .btn {
+        flex: 1;
+    }
+
+
+    /* =========================================
+       SCANNER
+    ========================================= */
+
+    .scanner-box {
+        width: 100%;
+        max-width: 100%;
+        height: 280px;
+    }
+
+    .scan-button {
+        width: 100%;
+        margin-bottom: 8px !important;
+    }
+}
+
+
+       /* =========================================================
+   SMALL MOBILE
+========================================================= */
+@media (max-width: 380px) {
+
+    #hero {
+        min-height: 300px;
+    }
+
+    #menu {
+        bottom: -100px !important;
+    }
+
+    .menu-wrapper {
+        padding: 7px;
+    }
+
+    .menu-nav {
+        gap: 4px;
+    }
+
+    .menu-link {
+        min-height: 82px;
+
+        padding: 7px 2px !important;
+
+        font-size: .61rem;
+    }
+
+    .menu-icon {
+
+        width: 34px;
+        height: 34px;
+
+        margin-bottom: 5px !important;
+
+        font-size: 14px;
+
+        border-radius: 10px;
+    }
+
+    .hero-brand {
+        margin-top: 50px !important;
+    }
+
+
+    .judul-utama {
+        font-size: 1.45rem !important;
+    }
+
+    .hero-subtitle {
+        font-size: .78rem;
+    }
+
+    #about {
+        padding-top: 175px;
+    }
+
+    .scanner-box {
+        height: 250px;
+    }
+}
+    </style>
+
+
+    <div class="content">
+
+        {{-- =====================================================
+            HERO
+        ====================================================== --}}
+        <section id="hero" class="d-flex align-items-center text-center">
+
+            <div class="container position-relative">
+
+                <div class="row">
+                    <div class="col-12">
+
+                        <div class="hero-brand"
+                            data-aos="fade-down">
+
+                            <i class="fa-solid fa-cube"></i>
+
+                            GO TUBE MONITORING SYSTEM
+
+                        </div>
+
+                        <h4
+                            data-aos="fade-left"
+                            class="judul-utama text-white fw-semibold">
+
+                            Membantu Monitoring
+                            Pengiriman Tabung Nitrogen
+
+                        </h4>
+
+                        <p
+                            class="hero-subtitle text-white mt-3 mb-4"
+                            data-aos="fade-right">
+
+                            Kelola pengiriman, tracking,
+                            dan perputaran tabung dengan lebih mudah.
+
+                        </p>
+
+                    </div>
+                </div>
+
+            </div>
+
+
+            {{-- =================================================
+                MENU
+            ================================================== --}}
+            <div
+                id="menu"
+                class="position-absolute w-100"
+                style="z-index:1000; ">
+
+                <div class="container">
+
+                    <div class="row menu-card justify-content-center">
+
+                        <div class="col-xl-10 col-lg-11 col-md-12">
+
+                            <div class="menu-wrapper">
+
+                                <ul class="nav menu-nav">
+
+                                    {{-- INPUT PENGIRIMAN --}}
+                                    @if (Auth::user()->role !== 'spv')
+
+                                        <li class="nav-item">
+
+                                            <a
+                                                class="nav-link text-center menu-link"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#modalInputPengiriman">
+
+                                                <i
+                                                    class="fa-solid fa-plus menu-icon">
+                                                </i>
+
+                                                <span>
+                                                    Input Pengiriman
+                                                </span>
+
+                                            </a>
+
+                                        </li>
+
+                                    @endif
+
+
+                                    {{-- TRACKING --}}
+                                    <li class="nav-item">
+
+                                        <a
+                                            class="nav-link text-center menu-link"
+                                            href="{{ route('tracking.index') }}">
+
+                                            <i
+                                                class="fa-solid fa-truck menu-icon">
+                                            </i>
+
+                                            <span>
+                                                Tracking Pengiriman
+                                            </span>
+
+                                        </a>
+
+                                    </li>
+
+
+                                    {{-- HISTORY --}}
+                                    <li class="nav-item">
+
+                                        <a
+                                            class="nav-link text-center menu-link"
+                                            href="{{ route('history.index') }}">
+
+                                            <i
+                                                class="fa-solid fa-clock-rotate-left menu-icon">
+                                            </i>
+
+                                            <span>
+                                                History Pengiriman
+                                            </span>
+
+                                        </a>
+
+                                    </li>
+
+
+                                    {{-- MONITORING TABUNG --}}
+                                    <li class="nav-item">
+
+                                        <a
+                                            class="nav-link text-center menu-link"
+                                            href="{{ route('monitoring.tabung') }}">
+
+                                            <i
+                                                class="fa-solid fa-chart-line menu-icon">
+                                            </i>
+
+                                            <span>
+                                                Monitoring Tabung
+                                            </span>
+
+                                        </a>
+
+                                    </li>
+
+
+                                    {{-- DATA TABUNG --}}
+                                    <li class="nav-item">
+
+                                        <a
+                                            class="nav-link text-center menu-link"
+                                            href="{{ route('tabung.index') }}">
+
+                                            <i
+                                                class="fa-solid fa-gas-pump menu-icon">
+                                            </i>
+
+                                            <span>
+                                                Data Tabung
+                                            </span>
+
+                                        </a>
+
+                                    </li>
+
+
+                                    {{-- DATA OUTLET --}}
+                                    <li class="nav-item">
+
+                                        <a
+                                            class="nav-link text-center menu-link"
+                                            href="{{ route('outlet.index') }}">
+
+                                            <i
+                                                class="fa-solid fa-store menu-icon">
+                                            </i>
+
+                                            <span>
+                                                Data Outlet
+                                            </span>
+
+                                        </a>
+
+                                    </li>
+
+                                </ul>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        {{-- =====================================================
+            RIWAYAT
+        ====================================================== --}}
+        <section id="about" class="section-padding">
+
+            <div class="riwayat container">
+
+                {{-- TITLE --}}
+                <div class="row">
+
+                    <div
+                        class="col-12 text-center"
+                        data-aos="fade-down"
+                        data-aos-delay="50">
+
+                        <div class="section-title">
+
+                            <h2 class="display-5 fw-semibold">
+                                RIWAYAT
+                            </h2>
+
+                            <div class="line"></div>
+
+                            <p class="mb-0">
+
+                                <span class="text-secondary">
+                                    {{ \Carbon\Carbon::now()->locale('id')->translatedFormat('l, d F Y') }}
+                                </span>
+
+                                <span class="mx-1">
+                                    •
+                                </span>
+
+                                <span class="text-secondary">
+                                    {{ \Carbon\Carbon::now()->locale('id')->format('H:i') }}
+                                    WIB
+                                </span>
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="row justify-content-between mt-5">
+
+                    {{-- =================================================
+                        AKTIVITAS HARI INI
+                    ================================================== --}}
+                    <div
+                        class="col-lg-6 activity-column"
+                        data-aos="fade-down"
+                        data-aos-delay="50">
+
+                        <div class="activity-title">
+
+                            <div class="activity-title-icon">
+
+                                <i class="fa-solid fa-clock-rotate-left"></i>
+
+                            </div>
+
+                            <div>
+
+                                <h3>
+                                    Aktivitas Hari Ini
+                                </h3>
+
+                                <small class="text-muted">
+                                    Ringkasan aktivitas pengiriman
+                                </small>
+
+                            </div>
+
+                        </div>
+
+
+                        @if ($aktivitasHariIni->isEmpty())
+
+                            <div class="empty-card">
+
+                                <div class="empty-icon">
+
+                                    <i class="fa-regular fa-folder-open"></i>
+
+                                </div>
+
+                                <h6 class="fw-bold">
+                                    Belum Ada Aktivitas
+                                </h6>
+
+                                <p class="mb-0 small">
+                                    Tidak ada aktivitas pengiriman
+                                    untuk hari ini.
+                                </p>
+
+                            </div>
+
+                        @else
+
+                            @foreach ($aktivitasHariIni as $aktivitas)
+
+                                <div class="card activity-card">
+
+                                    <div class="card-body">
+
+                                        <div class="activity-outlet">
+
+                                            <i class="fa-solid fa-store"></i>
+
+                                            <span>
+                                                {{ $aktivitas->outlet->nama_outlet }}
+                                            </span>
+
+                                        </div>
+
+
+                                        <div class="activity-info">
+
+                                            <span class="activity-badge">
+
+                                                <i class="fa-solid fa-cylinder"></i>
+
+                                                {{ $aktivitas->tabungs->count() }}
+
+                                                Tabung Isi Dikirim
+
+                                            </span>
+
+
+                                            <span class="activity-badge">
+
+                                                <i class="fa-solid fa-box"></i>
+
+                                                {{ $aktivitas->pengambilanKosong->count() }}
+
+                                                Tabung Kosong Diambil
+
+                                            </span>
+
+                                        </div>
+
+
+                                        <small class="activity-date">
+
+                                            <i class="fa-regular fa-calendar me-1"></i>
+
+                                            {{ \Carbon\Carbon::parse($aktivitas->tanggal_pengiriman)->translatedFormat('d F Y') }}
+
+                                        </small>
+
+                                    </div>
+
+                                </div>
+
+                            @endforeach
+
+                        @endif
+
+                    </div>
+
+
+
+                    {{-- =================================================
+                        STATISTIK
+                    ================================================== --}}
+                    <div
+                        data-aos="fade-down"
+                        data-aos-delay="150"
+                        class="col-lg-5">
+
+                        <div class="activity-title">
+
+                            <div class="activity-title-icon">
+
+                                <i class="fa-solid fa-chart-simple"></i>
+
+                            </div>
+
+                            <div>
+
+                                <h3>
+                                    Ringkasan Hari Ini
+                                </h3>
+
+                                <small class="text-muted">
+                                    Statistik aktivitas sistem
+                                </small>
+
+                            </div>
+
+                        </div>
+
+
+                        {{-- PENGIRIMAN --}}
+                        <div class="stat-card">
+
+                            <div class="stat-icon">
+
+                                <i class="fa-solid fa-truck-fast"></i>
+
+                            </div>
+
+                            <div>
+
+                                <p class="stat-label">
+                                    Total Pengiriman Tabung Isi
+                                </p>
+
+                                <p class="stat-value">
+
+                                    {{ $jumlahTabungHariIni }}
+
+                                    Pengiriman
+
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        {{-- PENGAMBILAN --}}
+                        <div class="stat-card">
+
+                            <div class="stat-icon">
+
+                                <i class="fa-solid fa-box-open"></i>
+
+                            </div>
+
+                            <div>
+
+                                <p class="stat-label">
+                                    Total Pengambilan Tabung Kosong
+                                </p>
+
+                                <p class="stat-value">
+
+                                    {{ $jumlahTabungKosongHariIni }}
+
+                                    Pengambilan
+
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        {{-- OUTLET --}}
+                        <div class="stat-card">
+
+                            <div class="stat-icon">
+
+                                <i class="fa-solid fa-store"></i>
+
+                            </div>
+
+                            <div>
+
+                                <p class="stat-label">
+                                    Jumlah Outlet Tujuan
+                                </p>
+
+                                <p class="stat-value">
+
+                                    {{ $jumlahOutletHariIni }}
+
+                                    Outlet
+
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        {{-- =====================================================
+            MODAL INPUT PENGIRIMAN
+        ====================================================== --}}
+        <div
+            class="modal fade"
+            id="modalInputPengiriman"
+            tabindex="-1"
+            aria-hidden="true">
+
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+
+                <div class="modal-content">
+
+                    {{-- HEADER --}}
+                    <div class="modal-header">
+
+                        <div>
+
+                            <h5 class="modal-title mb-1">
+
+                                <i class="fa-solid fa-truck-fast me-2"></i>
+
+                                Form Input Pengiriman
+
+                            </h5>
+
+                            <small class="opacity-75">
+                                Masukkan data pengiriman dan scan tabung
+                            </small>
+
+                        </div>
+
+                        <button
+                            type="button"
+                            class="btn-close btn-close-white"
+                            data-bs-dismiss="modal">
+                        </button>
+
+                    </div>
+
+
+                    {{-- BODY --}}
+                    <div class="modal-body">
+
+                        <form
+                            action="{{ route('pengiriman.store') }}"
+                            method="POST"
+                            id="formPengiriman">
+
+                            @csrf
+
+                            {{-- DATA PENGIRIMAN --}}
+                            <div class="row">
+
+                                {{-- OUTLET --}}
+                                <div class="col-md-6 mb-3">
+
+                                    <label>
+                                        Outlet
+                                    </label>
+
+                                    <select
+                                        class="form-select"
+                                        name="outlet"
+                                        required>
+
+                                        <option value="">
+                                            -- Pilih Outlet --
+                                        </option>
+
+                                        @foreach ($outlets as $outlet)
+
+                                            <option value="{{ $outlet->id }}">
+
+                                                {{ $outlet->nama_outlet }}
+
+                                            </option>
+
+                                        @endforeach
+
+                                    </select>
+
+                                </div>
+
+
+                                {{-- TANGGAL --}}
+                                <div class="col-md-6 mb-3">
+
+                                    <label>
+                                        Tanggal Pengiriman
+                                    </label>
+
+                                    <input
+                                        type="date"
+                                        name="tanggal_pengiriman"
+                                        class="form-control"
+                                        required>
+
+                                </div>
+
+                            </div>
+
+
+                            <hr class="scan-divider">
+
+
+                            {{-- =================================================
+                                SCAN TABUNG ISI
+                            ================================================== --}}
+                            <div class="scan-title isi">
+
+                                <i class="fa-solid fa-circle-check"></i>
+
+                                Scan Tabung ISI
+
+                            </div>
+
+
+                            <div class="text-center">
+
+                                <button
+                                    type="button"
+                                    class="btn btn-success scan-button"
+                                    id="startScanIsi">
+
+                                    <i class="fa-solid fa-camera me-1"></i>
+
+                                    Mulai Scan ISI
+
+                                </button>
+
+
+                                <button
+                                    type="button"
+                                    class="btn btn-danger scan-button d-none"
+                                    id="stopScanIsi">
+
+                                    <i class="fa-solid fa-stop me-1"></i>
+
+                                    Tutup Scanner
+
+                                </button>
+
+                            </div>
+
+
+                            <div
+                                id="readerIsi"
+                                class="scanner-box">
+                            </div>
+
+
+                            <div id="tabungWrapper"></div>
+
+
+                            <div class="mt-3">
+
+                                <label>
+                                    Keterangan Pengiriman
+                                </label>
+
+                                <textarea
+                                    name="keterangan"
+                                    class="form-control"
+                                    rows="3"
+                                    placeholder="Tambahkan keterangan jika diperlukan..."></textarea>
+
+                            </div>
+
+
+
+                            <hr class="scan-divider">
+
+
+                            {{-- =================================================
+                                SCAN TABUNG KOSONG
+                            ================================================== --}}
+                            <div class="scan-title kosong">
+
+                                <i class="fa-solid fa-circle-down"></i>
+
+                                Scan Tabung KOSONG
+
+                            </div>
+
+
+                            <div class="text-center">
+
+                                <button
+                                    type="button"
+                                    class="btn btn-primary scan-button"
+                                    id="startScanKosong">
+
+                                    <i class="fa-solid fa-camera me-1"></i>
+
+                                    Mulai Scan KOSONG
+
+                                </button>
+
+
+                                <button
+                                    type="button"
+                                    class="btn btn-danger scan-button d-none"
+                                    id="stopScanKosong">
+
+                                    <i class="fa-solid fa-stop me-1"></i>
+
+                                    Tutup Scanner
+
+                                </button>
+
+                            </div>
+
+
+                            <div
+                                id="readerKosong"
+                                class="scanner-box">
+                            </div>
+
+
+                            <div id="tabungWrapper2"></div>
+
+
+                            <div class="mt-3">
+
+                                <label>
+                                    Keterangan Pengambilan
+                                </label>
+
+                                <textarea
+                                    name="keterangan_pengambilan"
+                                    class="form-control"
+                                    rows="3"
+                                    placeholder="Tambahkan keterangan jika diperlukan..."></textarea>
+
+                            </div>
+
+                        </form>
+
+                    </div>
+
+
+                    {{-- FOOTER --}}
+                    <div class="modal-footer">
+
+                        <button
+                            type="button"
+                            class="btn btn-light"
+                            data-bs-dismiss="modal">
+
+                            Batal
+
+                        </button>
+
+
+                        <button
+                            type="submit"
+                            form="formPengiriman"
+                            class="btn btn-success px-4">
+
+                            <i class="fa-solid fa-floppy-disk me-1"></i>
+
+                            Simpan Pengiriman
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        {{-- =====================================================
+            QR SCANNER
+        ====================================================== --}}
+        <script src="https://unpkg.com/html5-qrcode"></script>
+
+        <script>
+
+            let scannerIsi = null;
+            let scannerKosong = null;
+
+            let scannedIsi = [];
+            let scannedKosong = [];
+
+
+            function getBackCamera(devices) {
+
+                return devices.find(cam =>
+                    cam.label.toLowerCase().includes("back") ||
+                    cam.label.toLowerCase().includes("rear")
+                ) || devices[0];
+
+            }
+
+
+            // =====================================================
+            // START SCAN ISI
+            // =====================================================
+            document.getElementById("startScanIsi").onclick = async function() {
+
+                if (scannerKosong) {
+
+                    await scannerKosong.stop().catch(() => {});
+
+                    scannerKosong.clear();
+
+                    scannerKosong = null;
+
+                    document.getElementById("readerKosong").style.display = "none";
+
+                    document
+                        .getElementById("stopScanKosong")
+                        .classList.add("d-none");
+
+                }
+
+
+                document.getElementById("readerIsi").style.display = "block";
+
+                document
+                    .getElementById("stopScanIsi")
+                    .classList.remove("d-none");
+
+
+                let devices = await Html5Qrcode.getCameras();
+
+                let camera = getBackCamera(devices);
+
+
+                scannerIsi = new Html5Qrcode("readerIsi");
+
+
+                scannerIsi.start(
+
+                    camera.id,
+
+                    {
+                        fps: 10,
+
+                        qrbox: {
+                            width: 200,
+                            height: 200
+                        },
+
+                        aspectRatio: 1.0
+                    },
+
+                    (decodedText) => {
+
+                        if (
+                            scannedIsi.includes(decodedText) ||
+                            scannedKosong.includes(decodedText)
+                        ) {
+
+                            alert("❌ Tabung sudah ada di list!");
+
+                            return;
+
+                        }
+
+
+                        scannedIsi.push(decodedText);
+
+
+                        let row = `
+
+                            <div class="scan-item">
+
+                                <input
+                                    type="text"
+                                    name="tabung[]"
+                                    value="${decodedText}"
+                                    class="form-control"
+                                    readonly
+                                >
+
+                                <button
+                                    type="button"
+                                    class="btn btn-danger btn-remove">
+
+                                    <i class="fa-solid fa-trash"></i>
+
+                                </button>
+
+                            </div>
+
+                        `;
+
+
+                        document
+                            .getElementById("tabungWrapper")
+                            .insertAdjacentHTML(
+                                "beforeend",
+                                row
+                            );
+
+
+                        new Audio(
+                            'https://www.soundjay.com/buttons/sounds/beep-07.mp3'
+                        ).play();
+
+                    }
+
+                );
+
+            };
+
+
+            // =====================================================
+            // STOP SCAN ISI
+            // =====================================================
+            document.getElementById("stopScanIsi").onclick = async function() {
+
+                if (scannerIsi) {
+
+                    await scannerIsi.stop().catch(() => {});
+
+                    scannerIsi.clear();
+
+                    scannerIsi = null;
+
+                }
+
+
+                document.getElementById("readerIsi").style.display = "none";
+
+                this.classList.add("d-none");
+
+            };
+
+
+            // =====================================================
+            // START SCAN KOSONG
+            // =====================================================
+            document.getElementById("startScanKosong").onclick = async function() {
+
+                if (scannerIsi) {
+
+                    await scannerIsi.stop().catch(() => {});
+
+                    scannerIsi.clear();
+
+                    scannerIsi = null;
+
+                    document.getElementById("readerIsi").style.display = "none";
+
+                    document
+                        .getElementById("stopScanIsi")
+                        .classList.add("d-none");
+
+                }
+
+
+                document.getElementById("readerKosong").style.display = "block";
+
+                document
+                    .getElementById("stopScanKosong")
+                    .classList.remove("d-none");
+
+
+                let devices = await Html5Qrcode.getCameras();
+
+                let camera = getBackCamera(devices);
+
+
+                scannerKosong = new Html5Qrcode("readerKosong");
+
+
+                scannerKosong.start(
+
+                    camera.id,
+
+                    {
+                        fps: 10,
+
+                        qrbox: {
+                            width: 200,
+                            height: 200
+                        },
+
+                        aspectRatio: 1.0
+                    },
+
+                    (decodedText) => {
+
+                        if (
+                            scannedKosong.includes(decodedText) ||
+                            scannedIsi.includes(decodedText)
+                        ) {
+
+                            alert("❌ Tabung sudah ada di list!");
+
+                            return;
+
+                        }
+
+
+                        scannedKosong.push(decodedText);
+
+
+                        let row = `
+
+                            <div class="scan-item">
+
+                                <input
+                                    type="text"
+                                    name="tabung2[]"
+                                    value="${decodedText}"
+                                    class="form-control"
+                                    readonly
+                                >
+
+                                <button
+                                    type="button"
+                                    class="btn btn-danger btn-remove2">
+
+                                    <i class="fa-solid fa-trash"></i>
+
+                                </button>
+
+                            </div>
+
+                        `;
+
+
+                        document
+                            .getElementById("tabungWrapper2")
+                            .insertAdjacentHTML(
+                                "beforeend",
+                                row
+                            );
+
+
+                        new Audio(
+                            'https://www.soundjay.com/buttons/sounds/beep-07.mp3'
+                        ).play();
+
+                    }
+
+                );
+
+            };
+
+
+            // =====================================================
+            // STOP SCAN KOSONG
+            // =====================================================
+            document.getElementById("stopScanKosong").onclick = async function() {
+
+                if (scannerKosong) {
+
+                    await scannerKosong.stop().catch(() => {});
+
+                    scannerKosong.clear();
+
+                    scannerKosong = null;
+
+                }
+
+
+                document.getElementById("readerKosong").style.display = "none";
+
+                this.classList.add("d-none");
+
+            };
+
+
+            // =====================================================
+            // HAPUS ITEM
+            // =====================================================
+            document.addEventListener("click", function(e) {
+
+                const removeIsi =
+                    e.target.closest(".btn-remove");
+
+                const removeKosong =
+                    e.target.closest(".btn-remove2");
+
+
+                if (removeIsi) {
+
+                    let row = removeIsi.closest(".scan-item");
+
+                    let val =
+                        row.querySelector("input").value;
+
+
+                    scannedIsi =
+                        scannedIsi.filter(
+                            item => item !== val
+                        );
+
+
+                    row.remove();
+
+                }
+
+
+                if (removeKosong) {
+
+                    let row =
+                        removeKosong.closest(".scan-item");
+
+                    let val =
+                        row.querySelector("input").value;
+
+
+                    scannedKosong =
+                        scannedKosong.filter(
+                            item => item !== val
+                        );
+
+
+                    row.remove();
+
+                }
+
+            });
+
+        </script>
+
+
+
+        {{-- =====================================================
+            SWEET ALERT
+        ====================================================== --}}
+
+        @if (session('success'))
+
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+            <script>
+
+                Swal.fire({
+
+                    icon: 'success',
+
+                    title: 'Berhasil!',
+
+                    text: @json(session('success')),
+
+                    showConfirmButton: false,
+
+                    timer: 2000,
+
+                    timerProgressBar: true
+
+                });
+
+            </script>
+
+        @endif
+
+
+        @if (session('error'))
+
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+            <script>
+
+                Swal.fire({
+
+                    icon: 'error',
+
+                    title: 'Gagal!',
+
+                    text: @json(session('error')),
+
+                    showConfirmButton: false,
+
+                    timer: 2500,
+
+                    timerProgressBar: true
+
+                });
+
+            </script>
+
+        @endif
+
+
+        @include('layouts.bawah')
+
+    </div>
+
+@endsection
