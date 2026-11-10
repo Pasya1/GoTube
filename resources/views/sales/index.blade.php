@@ -142,7 +142,7 @@ FILTER
                             </div>
 
                             <small>
-                                Gunakan filter untuk mencari data sales
+                                Filter dan urutan berlaku untuk tabel serta Export Excel
                             </small>
                         </div>
 
@@ -170,6 +170,10 @@ FILTER
                 <div class="card-body">
 
                     <form method="GET" action="{{ route('sales.index') }}">
+                        <input type="hidden" name="per_page" value="{{ $perPage }}">
+                        <p class="text-muted small mb-3">
+                            Terapkan filter terlebih dahulu. Excel akan memuat seluruh hasil filter, dari semua halaman tabel.
+                        </p>
 
                         {{-- =====================================================
                 SEARCH + FILTER UTAMA
@@ -390,38 +394,6 @@ FILTER
                             </div>
 
 
-                            {{-- PER PAGE --}}
-                            <div class="col-6 col-lg-2">
-
-                                <label class="form-label fw-semibold">
-
-                                    <i class="fa-solid fa-list-ol me-1"></i>
-
-                                    Tampilkan
-
-                                </label>
-
-                                <select name="per_page" class="form-select">
-
-                                    <option value="10" @selected($perPage == 10)>
-                                        10 Data
-                                    </option>
-
-                                    <option value="20" @selected($perPage == 20)>
-                                        20 Data
-                                    </option>
-
-                                    <option value="50" @selected($perPage == 50)>
-                                        50 Data
-                                    </option>
-
-                                    <option value="100" @selected($perPage == 100)>
-                                        100 Data
-                                    </option>
-
-                                </select>
-
-                            </div>
 
                         </div>
 
@@ -435,7 +407,7 @@ FILTER
 
                                 <i class="fa-solid fa-filter me-1"></i>
 
-                                Terapkan Filter
+                                Terapkan Filter untuk Export
 
                             </button>
 
@@ -460,15 +432,14 @@ FILTER
 
         <div class="sales-header mb-4">
 
-            <div>
-                <div class="d-flex align-items-center gap-2 mb-2">
-
-                </div>
+            <div class="text-muted small">
+                <strong class="text-dark">{{ number_format($sales->total(), 0, ',', '.') }} data siap diexport</strong>
+                <div>Sesuai filter yang sudah diterapkan, mencakup semua halaman.</div>
             </div>
 
             <div class="header-actions">
 
-                <a href="{{ route('sales.export', request()->query()) }}" class="btn btn-excel">
+                <a href="{{ route('sales.export', request()->except(['page', 'per_page'])) }}" class="btn btn-excel">
                     <i class="fa-solid fa-file-excel me-1"></i>
                     Export Excel
                 </a>
@@ -487,6 +458,34 @@ FILTER
         TABLE
     ========================================================== --}}
         <div class="card border-0 shadow-sm sales-card">
+
+            <div class="sales-display-toolbar">
+                <div class="sales-display-intro">
+                    <span class="sales-display-icon" aria-hidden="true"><i class="fa-solid fa-sliders"></i></span>
+                    <div>
+                        <div class="sales-display-title">Tampilan Tabel</div>
+                        <p>Atur baris per halaman. Excel tetap memuat semua hasil filter.</p>
+                    </div>
+                </div>
+                <form method="GET" action="{{ route('sales.index') }}" class="sales-display-form">
+                    @foreach (request()->except(['page', 'per_page']) as $key => $value)
+                        @if (is_scalar($value))
+                            <input type="hidden" name="{{ $key }}" value="{{ $value }}">
+                        @endif
+                    @endforeach
+                    <div class="sales-page-size">
+                    <label for="sales-per-page">Baris per halaman</label>
+                    <select id="sales-per-page" name="per_page" class="form-select">
+                        @foreach ([10, 20, 50, 100] as $pageSize)
+                            <option value="{{ $pageSize }}" @selected($perPage == $pageSize)>{{ $pageSize }} baris</option>
+                        @endforeach
+                    </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary-main sales-display-button">
+                        <i class="fa-solid fa-check me-1" aria-hidden="true"></i> Ubah Tampilan
+                    </button>
+                </form>
+            </div>
 
             <div class="card-header table-header">
 
@@ -2659,6 +2658,58 @@ FILTER
 
             }
 
+        }
+
+        /* Controls scoped to the sales table. */
+        .sales-card .sales-display-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 22px 24px;
+            background: linear-gradient(120deg, #f0f8fc, #fff);
+            border-bottom: 1px solid var(--sales-border);
+        }
+        .sales-display-intro { display: flex; align-items: center; gap: 12px; flex: 1 1 260px; min-width: 0; }
+        .sales-display-icon {
+            display: grid; place-items: center; flex: 0 0 44px; height: 44px;
+            border: 1px solid #d3e7f2; border-radius: 14px;
+            color: var(--sales-primary); background: #fff;
+        }
+        .sales-display-title { color: var(--sales-text); font-size: 14px; font-weight: 800; }
+        .sales-display-intro p { margin: 4px 0 0; color: #64748b; font-size: 12px; line-height: 1.6; }
+        .sales-display-form { display: flex; align-items: flex-end; gap: 10px; }
+        .sales-page-size label { display: block; margin-bottom: 6px; font-size: 11px; font-weight: 700; color: #64748b; }
+        .sales-page-size .form-select {
+            min-width: 140px; min-height: 42px; border-radius: 10px;
+            border-color: #d3e3ed; color: var(--sales-text); font-size: 13px; font-weight: 600;
+        }
+        .sales-page-size .form-select:focus { border-color: var(--sales-primary); box-shadow: 0 0 0 3px rgba(2,78,127,.12); }
+        .sales-display-form .sales-display-button { min-height: 42px; border-radius: 10px; padding: 9px 16px; font-size: 12px; white-space: nowrap; }
+        .sales-card .table-header { padding: 18px 24px; flex-wrap: wrap; }
+        .sales-card .table-header-info { flex-wrap: wrap; }
+        .sales-card .data-count-badge { border-radius: 20px; padding: 7px 12px; }
+        .sales-card .table-footer {
+            display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;
+            gap: 14px; padding: 18px 24px; background: #f8fbfd; border-top: 1px solid var(--sales-border);
+        }
+        .sales-card .table-footer-info { color: #64748b; font-size: 12px; }
+        .sales-card .table-footer-info strong { color: var(--sales-primary); }
+        .sales-card .pagination-wrapper { max-width: 100%; }
+        .sales-card .pagination { flex-wrap: wrap; gap: 4px; }
+        .sales-card .pagination .page-link { border-radius: 9px; }
+        @media (max-width: 767.98px) {
+            .sales-card .sales-display-toolbar { padding: 18px 16px; gap: 16px; }
+            .sales-display-intro { flex-basis: 100%; }
+            .sales-display-form { width: 100%; }
+            .sales-page-size { flex: 1; min-width: 0; }
+            .sales-page-size .form-select { min-width: 0; width: 100%; }
+            .sales-card .table-header { padding: 16px; align-items: flex-start; }
+            .sales-card .table-header-info { width: 100%; justify-content: space-between; }
+            .sales-card .table-footer { padding: 16px; flex-direction: column; align-items: stretch; }
+            .sales-card .table-footer-info { text-align: center; }
+            .sales-card .pagination-wrapper { width: 100%; justify-content: center; }
         }
     </style>
 
